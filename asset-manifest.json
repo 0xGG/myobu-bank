@@ -1,23 +1,23 @@
 {
   "files": {
     "main.css": "/myobu-bank/static/css/main.f7a30fca.chunk.css",
-    "main.js": "/myobu-bank/static/js/main.134e28a6.chunk.js",
-    "main.js.map": "/myobu-bank/static/js/main.134e28a6.chunk.js.map",
+    "main.js": "/myobu-bank/static/js/main.b37e3b89.chunk.js",
+    "main.js.map": "/myobu-bank/static/js/main.b37e3b89.chunk.js.map",
     "runtime-main.js": "/myobu-bank/static/js/runtime-main.895fd461.js",
     "runtime-main.js.map": "/myobu-bank/static/js/runtime-main.895fd461.js.map",
-    "static/js/2.6177e8f7.chunk.js": "/myobu-bank/static/js/2.6177e8f7.chunk.js",
-    "static/js/2.6177e8f7.chunk.js.map": "/myobu-bank/static/js/2.6177e8f7.chunk.js.map",
+    "static/js/2.5cd7929a.chunk.js": "/myobu-bank/static/js/2.5cd7929a.chunk.js",
+    "static/js/2.5cd7929a.chunk.js.map": "/myobu-bank/static/js/2.5cd7929a.chunk.js.map",
     "static/js/3.81bbad9e.chunk.js": "/myobu-bank/static/js/3.81bbad9e.chunk.js",
     "static/js/3.81bbad9e.chunk.js.map": "/myobu-bank/static/js/3.81bbad9e.chunk.js.map",
     "index.html": "/myobu-bank/index.html",
     "static/css/main.f7a30fca.chunk.css.map": "/myobu-bank/static/css/main.f7a30fca.chunk.css.map",
-    "static/js/2.6177e8f7.chunk.js.LICENSE.txt": "/myobu-bank/static/js/2.6177e8f7.chunk.js.LICENSE.txt",
+    "static/js/2.5cd7929a.chunk.js.LICENSE.txt": "/myobu-bank/static/js/2.5cd7929a.chunk.js.LICENSE.txt",
     "static/media/myobu.7c92efa4.png": "/myobu-bank/static/media/myobu.7c92efa4.png"
   },
   "entrypoints": [
     "static/js/runtime-main.895fd461.js",
-    "static/js/2.6177e8f7.chunk.js",
+    "static/js/2.5cd7929a.chunk.js",
     "static/css/main.f7a30fca.chunk.css",
-    "static/js/main.134e28a6.chunk.js"
+    "static/js/main.b37e3b89.chunk.js"
   ]
 }
