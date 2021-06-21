@@ -262,7 +262,6 @@ export default function Home(props: Props) {
       yearlyFee: yearlyFee,
       yearlyPercent: yearlyPercent,
     };
-    console.log("Estimation: ", estimation);
     setEstimation(estimation);
   }, [
     myobuInfo,
