@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/myobu-bank/static/css/main.f7a30fca.chunk.css",
-    "main.js": "/myobu-bank/static/js/main.e5993669.chunk.js",
-    "main.js.map": "/myobu-bank/static/js/main.e5993669.chunk.js.map",
+    "main.js": "/myobu-bank/static/js/main.134e28a6.chunk.js",
+    "main.js.map": "/myobu-bank/static/js/main.134e28a6.chunk.js.map",
     "runtime-main.js": "/myobu-bank/static/js/runtime-main.895fd461.js",
     "runtime-main.js.map": "/myobu-bank/static/js/runtime-main.895fd461.js.map",
     "static/js/2.6177e8f7.chunk.js": "/myobu-bank/static/js/2.6177e8f7.chunk.js",
@@ -18,6 +18,6 @@
     "static/js/runtime-main.895fd461.js",
     "static/js/2.6177e8f7.chunk.js",
     "static/css/main.f7a30fca.chunk.css",
-    "static/js/main.e5993669.chunk.js"
+    "static/js/main.134e28a6.chunk.js"
   ]
 }
