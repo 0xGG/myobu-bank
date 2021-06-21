@@ -11,7 +11,7 @@ jobs:
         - yarn install
         - CI= yarn build
     - stage: deploy
-      if: (branch = develop) AND (type = push)
+      if: (branch = master) AND (type = push)
       script:
         - yarn install
         - git remote set-url origin https://$GITHUB_TOKEN@github.com/0xGG/myobu-bank.git
@@ -24,4 +24,4 @@ notifications:
 stages:
   - name: build
   - name: deploy
-    if: (branch = develop) AND (type = push)
+    if: (branch = master) AND (type = push)
