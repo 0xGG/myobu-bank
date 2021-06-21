@@ -65,7 +65,6 @@ interface Props {}
 export default function Home(props: Props) {
   const classes = useStyles();
   const { walletAddress } = useParams<{ walletAddress?: string }>();
-  const [web3, setWeb3] = useState<Web3 | null>(null);
   const [contract, setContract] = useState<Contract | null>(null);
   const [myobuInfo, setMyobuInfo] = useState<MyobuInfo | null>(null);
   const [walletAddressInput, setWalletAddressinput] = useState<string>(
@@ -135,7 +134,6 @@ export default function Home(props: Props) {
       const web3 = new Web3(
         "https://eth-mainnet.alchemyapi.io/v2/BfPioABnA3btK_rV-rORjlu-wzk-b5Ih"
       );
-      setWeb3(web3);
       const contract = new web3.eth.Contract(
         myobuAbi as any,
         myobuContractAddress
@@ -202,7 +200,7 @@ export default function Home(props: Props) {
   useEffect(() => {
     updateMyobuInfo();
     updateCurrentBalance();
-  }, [walletAddress, updateCurrentBalance]);
+  }, [walletAddress, updateMyobuInfo, updateCurrentBalance]);
 
   useInterval(updateMyobuInfo, 5000);
 
