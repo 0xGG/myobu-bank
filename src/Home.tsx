@@ -235,13 +235,7 @@ export default function Home(props: Props) {
       return setEstimation(null);
     }
 
-    const transaction = transactions.find(
-      (t) => t.hash === selectedTransactionHash
-    );
-    if (!transaction) {
-      return setEstimation(null);
-    }
-
+    const transaction = transactions[0];
     const duration = Date.now() - transaction.createdAt.getTime();
     const dayPassed = duration / (1000 * 60 * 60 * 24);
     const currentTotalUSD = myobuInfo.price * currentBalance;
@@ -263,13 +257,7 @@ export default function Home(props: Props) {
       yearlyPercent: yearlyPercent,
     };
     setEstimation(estimation);
-  }, [
-    myobuInfo,
-    currentBalance,
-    oldBalance,
-    selectedTransactionHash,
-    transactions,
-  ]);
+  }, [myobuInfo, currentBalance, oldBalance, transactions]);
 
   useInterval(updateMyobuInfo, 5000);
 
