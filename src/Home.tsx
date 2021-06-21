@@ -251,7 +251,7 @@ export default function Home(props: Props) {
         Math.pow(1 + dailyPercent, 30) * currentTotalUSD - currentTotalUSD;
       const monthlyPercent = monthlyFee / currentTotalUSD;
       const yearlyFee =
-        Math.pow(dailyPercent + 1, 365) * currentTotalUSD - currentTotalUSD;
+        Math.pow(1 + dailyPercent, 365) * currentTotalUSD - currentTotalUSD;
       const yearlyPercent = yearlyFee / currentTotalUSD;
       const estimation: Estimation = {
         dailyFee: dailyFee,
@@ -460,7 +460,16 @@ export default function Home(props: Props) {
                   {estimation && (
                     <>
                       <Divider></Divider>
-                      <p>Estimation (if no sell & at current market price):</p>
+                      <p style={{ marginBottom: 0 }}>
+                        <strong>Estimation:</strong>
+                      </p>
+                      <Typography variant={"caption"}>
+                        * The estimation is not 100% accurate.
+                      </Typography>
+                      <br></br>
+                      <Typography variant={"caption"}>
+                        * Assumed if no sell & at current market price
+                      </Typography>
                       <p>
                         1-day Fee:{" "}
                         <Typography color={"primary"} component={"strong"}>
@@ -470,7 +479,11 @@ export default function Home(props: Props) {
                         <Typography color={"primary"} component={"strong"}>
                           {(estimation.dailyPercent * 100).toFixed(2)}%
                         </Typography>
-                        )
+                        )<br></br>
+                        <Typography color={"primary"} component={"strong"}>
+                          {estimation.dailyFee / myobuInfo.price}
+                        </Typography>{" "}
+                        Myōbu tokens.
                       </p>
                       <p>
                         30-day Fee:{" "}
@@ -481,7 +494,11 @@ export default function Home(props: Props) {
                         <Typography color={"primary"} component={"strong"}>
                           {(estimation.monthlyPercent * 100).toFixed(2)}%
                         </Typography>
-                        )
+                        )<br></br>
+                        <Typography color={"primary"} component={"strong"}>
+                          {estimation.monthlyFee / myobuInfo.price}
+                        </Typography>{" "}
+                        Myōbu tokens.
                       </p>
                       <p>
                         365-day Fee:{" "}
@@ -492,7 +509,11 @@ export default function Home(props: Props) {
                         <Typography color={"primary"} component={"strong"}>
                           {(estimation.yearlyPercent * 100).toFixed(2)}%
                         </Typography>
-                        )
+                        )<br></br>
+                        <Typography color={"primary"} component={"strong"}>
+                          {estimation.yearlyFee / myobuInfo.price}
+                        </Typography>{" "}
+                        Myōbu tokens.
                       </p>
                     </>
                   )}
