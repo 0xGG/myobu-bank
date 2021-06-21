@@ -7,6 +7,7 @@ import {
   CardContent,
   CardHeader,
   Container,
+  Divider,
   Link,
   MenuItem,
   Select,
@@ -39,6 +40,15 @@ interface Transaction {
   hash: string;
 }
 
+interface Estimation {
+  dailyFee: number;
+  dailyPercent: number;
+  monthlyFee: number;
+  monthlyPercent: number;
+  yearlyFee: number;
+  yearlyPercent: number;
+}
+
 const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: theme.palette.background.default,
@@ -56,6 +66,7 @@ const useStyles = makeStyles((theme) => ({
   },
   developerInfoCard: {
     marginTop: theme.spacing(4),
+    marginBottom: theme.spacing(8),
     position: "relative",
   },
 }));
@@ -86,6 +97,7 @@ export default function Home(props: Props) {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [selectedTransactionHash, setSelectedTransactionhash] =
     useState<string>("");
+  const [estimation, setEstimation] = useState<Estimation | null>(null);
   const theme = useTheme();
 
   const getUserCurrentBalance = useCallback(
@@ -212,6 +224,53 @@ export default function Home(props: Props) {
     updateMyobuInfo();
     updateCurrentBalance();
   }, [walletAddress, updateMyobuInfo, updateCurrentBalance]);
+
+  useEffect(() => {
+    if (
+      !myobuInfo ||
+      !currentBalance ||
+      !transactions.length ||
+      !selectedTransactionHash
+    ) {
+      return setEstimation(null);
+    }
+
+    const transaction = transactions.find(
+      (t) => t.hash === selectedTransactionHash
+    );
+    if (!transaction) {
+      return setEstimation(null);
+    }
+
+    const duration = Date.now() - transaction.createdAt.getTime();
+    const dayPassed = duration / (1000 * 60 * 60 * 24);
+    const currentTotalUSD = myobuInfo.price * currentBalance;
+    const usdEarned = myobuInfo.price * (currentBalance - oldBalance);
+    const dailyFee = usdEarned / dayPassed;
+    const dailyPercent = dailyFee / currentTotalUSD;
+    const monthlyFee =
+      Math.pow(1 + dailyPercent, 30) * currentTotalUSD - currentTotalUSD;
+    const monthlyPercent = monthlyFee / currentTotalUSD;
+    const yearlyFee =
+      Math.pow(dailyPercent + 1, 365) * currentTotalUSD - currentTotalUSD;
+    const yearlyPercent = yearlyFee / currentTotalUSD;
+    const estimation: Estimation = {
+      dailyFee: dailyFee,
+      dailyPercent: dailyPercent,
+      monthlyFee: monthlyFee,
+      monthlyPercent: monthlyPercent,
+      yearlyFee: yearlyFee,
+      yearlyPercent: yearlyPercent,
+    };
+    console.log("Estimation: ", estimation);
+    setEstimation(estimation);
+  }, [
+    myobuInfo,
+    currentBalance,
+    oldBalance,
+    selectedTransactionHash,
+    transactions,
+  ]);
 
   useInterval(updateMyobuInfo, 5000);
 
@@ -405,6 +464,45 @@ export default function Home(props: Props) {
                       ).toFixed(2)}
                     </Typography>
                   </p>
+                  {estimation && (
+                    <>
+                      <Divider></Divider>
+                      <p>Estimation (if no sell & at current market price):</p>
+                      <p>
+                        1-day Fee:{" "}
+                        <Typography color={"primary"} component={"strong"}>
+                          ${estimation.dailyFee.toFixed(2)}
+                        </Typography>
+                        {"   "}(
+                        <Typography color={"primary"} component={"strong"}>
+                          {(estimation.dailyPercent * 100).toFixed(2)}%
+                        </Typography>
+                        )
+                      </p>
+                      <p>
+                        30-day Fee:{" "}
+                        <Typography color={"primary"} component={"strong"}>
+                          ${estimation.monthlyFee.toFixed(2)}
+                        </Typography>
+                        {"   "}(
+                        <Typography color={"primary"} component={"strong"}>
+                          {(estimation.monthlyPercent * 100).toFixed(2)}%
+                        </Typography>
+                        )
+                      </p>
+                      <p>
+                        365-day Fee:{" "}
+                        <Typography color={"primary"} component={"strong"}>
+                          ${estimation.yearlyFee.toFixed(2)}
+                        </Typography>
+                        {"   "}(
+                        <Typography color={"primary"} component={"strong"}>
+                          {(estimation.yearlyPercent * 100).toFixed(2)}%
+                        </Typography>
+                        )
+                      </p>
+                    </>
+                  )}
                 </>
               ) : null}
             </Box>
