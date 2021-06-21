@@ -295,7 +295,7 @@ export default function Home(props: Props) {
           <CardContent>
             <TextField
               fullWidth={true}
-              placeholder={"0x1234..."}
+              placeholder={"0x1234... Press 'Enter' when done entering"}
               helperText={
                 "Please enter your wallet address to view your profit earned so far"
               }
