@@ -62,9 +62,20 @@ const useStyles = makeStyles((theme) => ({
 
 interface Props {}
 
+function isWalletAddressValid(walletAddrses: string | undefined) {
+  if (!walletAddrses) {
+    return false;
+  } else {
+    return walletAddrses.startsWith("0x") && walletAddrses.length === 42;
+  }
+}
+
 export default function Home(props: Props) {
   const classes = useStyles();
-  const { walletAddress } = useParams<{ walletAddress?: string }>();
+  let { walletAddress } = useParams<{ walletAddress?: string }>();
+  if (!isWalletAddressValid(walletAddress)) {
+    walletAddress = "";
+  }
   const [contract, setContract] = useState<Contract | null>(null);
   const [myobuInfo, setMyobuInfo] = useState<MyobuInfo | null>(null);
   const [walletAddressInput, setWalletAddressinput] = useState<string>(
@@ -291,27 +302,45 @@ export default function Home(props: Props) {
           </CardActions>
         </Card>
         <Card className={clsx(classes.userInfoCard)}>
-          <CardHeader title={"Wallet"}></CardHeader>
+          <CardHeader
+            title={
+              walletAddress ? (
+                <Link
+                  title={walletAddress}
+                  href={`https://etherscan.io/token/${myobuContractAddress}?a=${walletAddress}`}
+                  target={"_blank"}
+                >
+                  {"👛 " + walletAddress.slice(0, 20) + "..."}
+                </Link>
+              ) : (
+                "Enter your wallet address"
+              )
+            }
+          ></CardHeader>
           <CardContent>
             <TextField
               fullWidth={true}
-              placeholder={"0x1234... Press 'Enter' when done entering"}
+              variant="outlined"
+              type="search"
+              placeholder={"0x1234..."}
               helperText={
                 "Please enter your wallet address to view your profit earned so far"
               }
               onChange={(event) => {
+                const walletAddress = event.currentTarget.value.trim();
+                if (isWalletAddressValid(walletAddress)) {
+                  browserHistory.push(`/${walletAddress}`);
+                }
                 setWalletAddressinput(event.currentTarget.value);
               }}
               value={walletAddressInput}
               onKeyDown={(event) => {
                 if (event.which === 13) {
-                  if (
-                    !walletAddressInput.startsWith("0x") ||
-                    walletAddressInput.trim().length !== 42
-                  ) {
+                  const walletAddress = walletAddressInput.trim();
+                  if (!isWalletAddressValid(walletAddress)) {
                     alert("Invalid wallet address");
                   } else {
-                    browserHistory.push(`/${walletAddressInput.trim()}`);
+                    browserHistory.push(`/${walletAddress}`);
                   }
                 }
               }}
