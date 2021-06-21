@@ -227,37 +227,43 @@ export default function Home(props: Props) {
 
   useEffect(() => {
     if (
+      !walletAddress ||
       !myobuInfo ||
       !currentBalance ||
-      !transactions.length ||
-      !selectedTransactionHash
+      !transactions.length
     ) {
       return setEstimation(null);
     }
 
-    const transaction = transactions[0];
-    const duration = Date.now() - transaction.createdAt.getTime();
-    const dayPassed = duration / (1000 * 60 * 60 * 24);
-    const currentTotalUSD = myobuInfo.price * currentBalance;
-    const usdEarned = myobuInfo.price * (currentBalance - oldBalance);
-    const dailyFee = usdEarned / dayPassed;
-    const dailyPercent = dailyFee / currentTotalUSD;
-    const monthlyFee =
-      Math.pow(1 + dailyPercent, 30) * currentTotalUSD - currentTotalUSD;
-    const monthlyPercent = monthlyFee / currentTotalUSD;
-    const yearlyFee =
-      Math.pow(dailyPercent + 1, 365) * currentTotalUSD - currentTotalUSD;
-    const yearlyPercent = yearlyFee / currentTotalUSD;
-    const estimation: Estimation = {
-      dailyFee: dailyFee,
-      dailyPercent: dailyPercent,
-      monthlyFee: monthlyFee,
-      monthlyPercent: monthlyPercent,
-      yearlyFee: yearlyFee,
-      yearlyPercent: yearlyPercent,
-    };
-    setEstimation(estimation);
-  }, [myobuInfo, currentBalance, oldBalance, transactions]);
+    (async function () {
+      const latestTransaction = transactions[0];
+      const duration = Date.now() - latestTransaction.createdAt.getTime();
+      const dayPassed = duration / (1000 * 60 * 60 * 24);
+      const currentTotalUSD = myobuInfo.price * currentBalance;
+      const oldBalance = await getUserBalanceAtTransactionBlockNumber(
+        walletAddress,
+        latestTransaction.blockNumber
+      );
+      const usdEarned = myobuInfo.price * (currentBalance - oldBalance);
+      const dailyFee = usdEarned / dayPassed;
+      const dailyPercent = dailyFee / currentTotalUSD;
+      const monthlyFee =
+        Math.pow(1 + dailyPercent, 30) * currentTotalUSD - currentTotalUSD;
+      const monthlyPercent = monthlyFee / currentTotalUSD;
+      const yearlyFee =
+        Math.pow(dailyPercent + 1, 365) * currentTotalUSD - currentTotalUSD;
+      const yearlyPercent = yearlyFee / currentTotalUSD;
+      const estimation: Estimation = {
+        dailyFee: dailyFee,
+        dailyPercent: dailyPercent,
+        monthlyFee: monthlyFee,
+        monthlyPercent: monthlyPercent,
+        yearlyFee: yearlyFee,
+        yearlyPercent: yearlyPercent,
+      };
+      setEstimation(estimation);
+    })();
+  }, [walletAddress, myobuInfo, currentBalance, transactions]);
 
   useInterval(updateMyobuInfo, 5000);
 
