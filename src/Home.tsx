@@ -460,7 +460,7 @@ export default function Home(props: Props) {
                   {estimation && (
                     <>
                       <Divider></Divider>
-                      <p style={{ margin: 0 }}>
+                      <p style={{ marginBottom: 0 }}>
                         <strong>Estimation:</strong>
                       </p>
                       <Typography variant={"caption"}>
