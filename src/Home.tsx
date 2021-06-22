@@ -292,10 +292,10 @@ export default function Home(props: Props) {
               )}
             </p>
             <p style={{ margin: 0 }}>
-              Market cap:{" "}
-              {myobuInfo && myobuInfo.marketCap ? (
+              Fully diluted market cap:{" "}
+              {myobuInfo && myobuInfo.price ? (
                 <Typography color={"primary"} component={"strong"}>
-                  {"$" + myobuInfo.marketCap}
+                  {"$" + (myobuTotalSupply * myobuInfo.price).toFixed(2)}
                 </Typography>
               ) : (
                 "-"
