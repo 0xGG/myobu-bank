@@ -23,7 +23,7 @@ import { useParams } from "react-router";
 import Web3 from "web3";
 import { Contract } from "web3-eth-contract";
 import { browserHistory } from "./history";
-import { myobuAbi, myobuContractAddress } from "./myobu";
+import { myobuAbi, myobuContractAddress, myobuTotalSupply } from "./myobu";
 import logo from "./myobu.png";
 
 interface MyobuInfo {
@@ -236,16 +236,10 @@ export default function Home(props: Props) {
     }
 
     (async function () {
-      const latestTransaction = transactions[0];
-      const duration = Date.now() - latestTransaction.createdAt.getTime();
-      const dayPassed = duration / (1000 * 60 * 60 * 24);
+      const volume = myobuInfo.volume;
+      const proportion = currentBalance / myobuTotalSupply;
       const currentTotalUSD = myobuInfo.price * currentBalance;
-      const oldBalance = await getUserBalanceAtTransactionBlockNumber(
-        walletAddress,
-        latestTransaction.blockNumber
-      );
-      const usdEarned = myobuInfo.price * (currentBalance - oldBalance);
-      const dailyFee = usdEarned / dayPassed;
+      const dailyFee = volume * ((0.02 + 0.07) / 2) * proportion;
       const dailyPercent = dailyFee / currentTotalUSD;
       const monthlyFee =
         Math.pow(1 + dailyPercent, 30) * currentTotalUSD - currentTotalUSD;
@@ -263,7 +257,7 @@ export default function Home(props: Props) {
       };
       setEstimation(estimation);
     })();
-  }, [walletAddress, myobuInfo, currentBalance, transactions]);
+  }, [walletAddress, myobuInfo, currentBalance]);
 
   useInterval(updateMyobuInfo, 5000);
 
@@ -468,7 +462,11 @@ export default function Home(props: Props) {
                       </Typography>
                       <br></br>
                       <Typography variant={"caption"}>
-                        * Assumed if no sell & at current market price
+                        * Calculation is based on the past 24Hr volume.
+                      </Typography>
+                      <br></br>
+                      <Typography variant={"caption"}>
+                        * Assumed (2% + 7%)/2 redistribution.
                       </Typography>
                       <p>
                         1-day Fee:{" "}
