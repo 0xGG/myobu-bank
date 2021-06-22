@@ -1,5 +1,6 @@
 export const myobuContractAddress =
   "0x75d12e4f91df721fafcae4c6cd1d5280381370ac";
+export const myobuTotalSupply = 1000000000000;
 export const myobuAbi = [
   {
     inputs: [
