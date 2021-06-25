@@ -1,11 +1,11 @@
 const ghpages = require("gh-pages");
 
 ghpages.publish(
-  "./build",
+  "./dist",
   {
     branch: "gh-pages",
   },
-  function (err) {
+  function(err) {
     console.log(err);
   }
 );
