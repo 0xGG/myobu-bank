@@ -119,7 +119,7 @@
                 v-bind:key="transaction.hash"
               >
                 <div>
-                  <p class="mb-0">{{ transaction.hash.slice(0, 12) }}... -</p>
+                  <p class="mb-0">{{ transaction.hash.slice(0, 12) }}... -&nbsp;</p>
                   <p class="mb-0">{{ transaction.createdAt.toString() }}</p>
                 </div>
               </option>
@@ -129,7 +129,12 @@
             <p class="mt-3 mb-0">
               You were holding
               <strong class="text-primary">{{ oldBalance }}</strong> Myōbu
-              tokens.
+              tokens at the
+              <a
+                target="_blank"
+                v-bind:href="`https://etherscan.io/tx/${selectedTransactionHash}`"
+                >selected transaction time</a
+              >.
             </p>
             <p class="mb-0">
               You earned
