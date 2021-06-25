@@ -48,20 +48,6 @@
           </span>
           <span v-else>-</span>
         </p>
-        <p v-if="devBuybackBalance !== undefined && myobuInfo">
-          The dev buyback wallet
-          <a
-            href="https://etherscan.io/token/0x75d12e4f91df721fafcae4c6cd1d5280381370ac?a=0xfb4955934485c645173ab63a75b72a1a83ef183d"
-            target="_blank"
-            >{{ myobuDevBuybackWalletAddress.slice(0, 12) }}...</a
-          >
-          has burned
-          <span class="text-primary">{{ devBuybackBalance }}</span> Myōbu tokens
-          ≈
-          <span class="text-primary"
-            >${{ (devBuybackBalance * myobuInfo.price).toFixed(2) }}</span
-          >
-        </p>
         <a
           class="btn btn-primary mt-3"
           target="_blank"
@@ -74,6 +60,74 @@
           href="https://www.dextools.io/app/uniswap/pair-explorer/0xa440baf25ac41b26a6ea40f864542b54a76ce530"
           >Open on Dextools</a
         >
+        <hr />
+        <h2>Dev / team wallets</h2>
+        <p v-if="devBuybackBalance !== undefined && myobuInfo" class="mb-0">
+          The dev buyback wallet
+          <a
+            v-bind:href="`https://etherscan.io/token/0x75d12e4f91df721fafcae4c6cd1d5280381370ac?a=${myobuDevBuybackWalletAddress}`"
+            target="_blank"
+            >{{ myobuDevBuybackWalletAddress.slice(0, 12) }}...</a
+          >
+          has burned
+          <span class="text-primary">{{ devBuybackBalance }}</span> Myōbu tokens
+          ≈
+          <span class="text-primary"
+            >${{ (devBuybackBalance * myobuInfo.price).toFixed(2) }}</span
+          >
+        </p>
+        <p v-if="devWalletBalance !== undefined && myobuInfo" class="mb-0">
+          The dev wallet
+          <a
+            v-bind:href="`https://etherscan.io/token/0x75d12e4f91df721fafcae4c6cd1d5280381370ac?a=${myobuDevWalletAddress}`"
+            target="_blank"
+            >{{ myobuDevWalletAddress.slice(0, 12) }}...</a
+          >
+          is holding
+          <span class="text-primary">{{ devWalletBalance }}</span> Myōbu tokens
+          ≈
+          <span class="text-primary"
+            >${{ (devWalletBalance * myobuInfo.price).toFixed(2) }}</span
+          >
+        </p>
+        <p
+          v-if="taxMarketingWalletBalance1 !== undefined && myobuInfo"
+          class="mb-0"
+        >
+          The tax/marketing wallet
+          <a
+            v-bind:href="`https://etherscan.io/token/0x75d12e4f91df721fafcae4c6cd1d5280381370ac?a=${myobuTaxMarketingWalletAddress1}`"
+            target="_blank"
+            >{{ myobuTaxMarketingWalletAddress1.slice(0, 12) }}...</a
+          >
+          is holding
+          <span class="text-primary">{{ taxMarketingWalletBalance1 }}</span>
+          Myōbu tokens ≈
+          <span class="text-primary"
+            >${{
+              (taxMarketingWalletBalance1 * myobuInfo.price).toFixed(2)
+            }}</span
+          >
+        </p>
+        <p
+          v-if="taxMarketingWalletBalance2 !== undefined && myobuInfo"
+          class="mb-0"
+        >
+          The tax/marketing wallet
+          <a
+            v-bind:href="`https://etherscan.io/token/0x75d12e4f91df721fafcae4c6cd1d5280381370ac?a=${myobuTaxMarketingWalletAddress2}`"
+            target="_blank"
+            >{{ myobuTaxMarketingWalletAddress2.slice(0, 12) }}...</a
+          >
+          is holding
+          <span class="text-primary">{{ taxMarketingWalletBalance2 }}</span>
+          Myōbu tokens ≈
+          <span class="text-primary"
+            >${{
+              (taxMarketingWalletBalance2 * myobuInfo.price).toFixed(2)
+            }}</span
+          >
+        </p>
       </div>
     </div>
 
@@ -119,7 +173,9 @@
                 v-bind:key="transaction.hash"
               >
                 <div>
-                  <p class="mb-0">{{ transaction.hash.slice(0, 12) }}... -&nbsp;</p>
+                  <p class="mb-0">
+                    {{ transaction.hash.slice(0, 12) }}... -&nbsp;
+                  </p>
                   <p class="mb-0">{{ transaction.createdAt.toString() }}</p>
                 </div>
               </option>
@@ -235,6 +291,9 @@ import {
   myobuContractAddress,
   myobuTotalSupply,
   myobuDevBuybackWalletAddress,
+  myobuDevWalletAddress,
+  myobuTaxMarketingWalletAddress1,
+  myobuTaxMarketingWalletAddress2,
 } from "../lib/myobu";
 
 interface MyobuInfo {
@@ -268,12 +327,18 @@ interface Data {
   currentBalance?: number;
   oldBalance?: number;
   devBuybackBalance?: number;
+  devWalletBalance?: number;
+  taxMarketingWalletBalance1?: number;
+  taxMarketingWalletBalance2?: number;
   transactions: Transaction[];
   selectedTransactionHash: string;
   estimation?: Estimation;
   myobuTotalSupply: number;
   myobuContractAddress: string;
   myobuDevBuybackWalletAddress: string;
+  myobuDevWalletAddress: string;
+  myobuTaxMarketingWalletAddress1: string;
+  myobuTaxMarketingWalletAddress2: string;
   updateCurrentBalanceTimer?: ReturnType<typeof setInterval>;
 }
 
@@ -296,12 +361,18 @@ export default Vue.extend({
       currentBalance: undefined,
       oldBalance: undefined,
       devBuybackBalance: undefined,
+      devWalletBalance: undefined,
+      taxMarketingWalletBalance1: undefined,
+      taxMarketingWalletBalance2: undefined,
       transactions: [],
       selectedTransactionHash: "",
       estimation: undefined,
       myobuTotalSupply,
       myobuContractAddress,
       myobuDevBuybackWalletAddress,
+      myobuDevWalletAddress,
+      myobuTaxMarketingWalletAddress1,
+      myobuTaxMarketingWalletAddress2,
       updateCurrentBalanceTimer: undefined,
     };
     return d;
@@ -318,7 +389,7 @@ export default Vue.extend({
     this.contract = contract;
 
     this.updateMyobuInfo();
-    this.updateDevBuybackBalance();
+    this.updateDevWalletData();
 
     const { walletAddress } = this.$route.params;
     if (isWalletAddressValid(walletAddress)) {
@@ -367,10 +438,19 @@ export default Vue.extend({
       update();
     },
 
-    updateDevBuybackBalance() {
+    updateDevWalletData() {
       const update = async () => {
         this.devBuybackBalance = await this.getUserCurrentBalance(
           myobuDevBuybackWalletAddress
+        );
+        this.devWalletBalance = await this.getUserCurrentBalance(
+          myobuDevWalletAddress
+        );
+        this.taxMarketingWalletBalance1 = await this.getUserCurrentBalance(
+          myobuTaxMarketingWalletAddress1
+        );
+        this.taxMarketingWalletBalance2 = await this.getUserCurrentBalance(
+          myobuTaxMarketingWalletAddress2
         );
       };
       setInterval(update, 10000);

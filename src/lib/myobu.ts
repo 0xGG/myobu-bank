@@ -2,6 +2,13 @@ export const myobuContractAddress =
   "0x75d12e4f91df721fafcae4c6cd1d5280381370ac";
 export const myobuDevBuybackWalletAddress =
   "0xfb4955934485c645173ab63a75b72a1a83ef183d";
+export const myobuDevWalletAddress =
+  "0x75d12e4f91df721fafcae4c6cd1d5280381370ac";
+export const myobuTaxMarketingWalletAddress1 =
+  "0x2f039292ec1c76be59d057186751cfbb37fa101b";
+export const myobuTaxMarketingWalletAddress2 =
+  "0x4e2af3ac0571ecc47cf4d539f9bbdf1996741c98";
+
 export const myobuTotalSupply = 1000000000000;
 export const myobuAbi = [
   {
