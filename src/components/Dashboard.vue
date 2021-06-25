@@ -321,7 +321,7 @@ export default Vue.extend({
     this.updateDevBuybackBalance();
 
     const { walletAddress } = this.$route.params;
-    if (isWalletAddressValid) {
+    if (isWalletAddressValid(walletAddress)) {
       this.walletAddressInput = walletAddress;
       this.walletAddress = walletAddress;
     }
