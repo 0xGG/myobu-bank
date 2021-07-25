@@ -160,6 +160,12 @@
               <strong class="text-primary">{{ currentBalance }}</strong> Myōbu
               tokens.
             </p>
+            <p class="mt-0 mb-0">
+              ≈
+              <strong class="text-primary"
+                >${{ (currentBalance * myobuInfo.price).toFixed(2) }}</strong
+              >
+            </p>
           </div>
           <div v-if="!!transactions.length">
             <p>
@@ -219,7 +225,7 @@
             </p>
             <p class="text-muted mb-4">* Assumed (2% + 7%)/2 redistribution.</p>
             <p class="mb-0">
-              1-day Fee:
+              1-day Reward:
               <strong class="text-primary"
                 >${{ estimation.dailyFee.toFixed(2) }}</strong
               >
@@ -234,7 +240,7 @@
               Myōbu tokens.
             </p>
             <p class="mb-0">
-              30-day Fee:
+              30-day Reward:
               <strong class="text-primary"
                 >${{ estimation.monthlyFee.toFixed(2) }}</strong
               >
@@ -249,7 +255,7 @@
               Myōbu tokens.
             </p>
             <p class="mb-0">
-              365-day Fee:
+              365-day Reward:
               <strong class="text-primary"
                 >${{ estimation.yearlyFee.toFixed(2) }}</strong
               >
