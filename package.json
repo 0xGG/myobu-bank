@@ -9,6 +9,7 @@
     "deploy-gh-pages": "npm run build && gh-pages-clean && node gh-pages-deploy.js"
   },
   "dependencies": {
+    "@metamask/detect-provider": "^1.2.0",
     "core-js": "^3.6.5",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",

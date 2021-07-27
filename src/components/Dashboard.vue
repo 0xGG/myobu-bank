@@ -132,7 +132,7 @@
     </div>
 
     <div class="card mt-4">
-      <div class="card-body">
+      <div class="card-body" v-if="!!contract">
         <div class="card-title">
           <h1 v-if="walletAddress">
             👛
@@ -160,7 +160,7 @@
               <strong class="text-primary">{{ currentBalance }}</strong> Myōbu
               tokens.
             </p>
-            <p class="mt-0 mb-0">
+            <p class="mt-0 mb-0" v-if="myobuInfo">
               ≈
               <strong class="text-primary"
                 >${{ (currentBalance * myobuInfo.price).toFixed(2) }}</strong
@@ -205,7 +205,7 @@
               }}</strong>
               Myōbu tokens.
             </p>
-            <p class="mt-0 mb-0">
+            <p class="mt-0 mb-0" v-if="myobuInfo">
               ≈
               <strong class="text-primary"
                 >${{
@@ -272,6 +272,13 @@
           </div>
         </div>
       </div>
+      <div v-else>
+        <div class="card-body">
+          <div class="card-title">
+            <h1>Please install MetaMask!</h1>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="card mt-4 mb-5">
@@ -292,6 +299,7 @@
 import Vue from "vue";
 import Web3 from "web3";
 import { Contract } from "web3-eth-contract";
+import detectEthereumProvider from "@metamask/detect-provider";
 import {
   myobuAbi,
   myobuContractAddress,
@@ -385,14 +393,26 @@ export default Vue.extend({
   },
 
   mounted() {
-    const web3 = new Web3(
-      "https://eth-mainnet.alchemyapi.io/v2/BfPioABnA3btK_rV-rORjlu-wzk-b5Ih"
-    );
-    const contract = new web3.eth.Contract(
-      myobuAbi as any,
-      myobuContractAddress
-    );
-    this.contract = contract;
+    (async () => {
+      const provider: any = await detectEthereumProvider();
+      if (provider) {
+        try {
+          // Request account access if needed
+          // await (window["ethereum"] as any).enable();
+          const web3 = new Web3(provider);
+          const contract = new web3.eth.Contract(
+            myobuAbi as any,
+            myobuContractAddress
+          );
+          this.contract = contract;
+        } catch (error) {
+          // User denied account access...
+        }
+      } else {
+        console.log("Please install MetaMask!");
+        this.contract = null;
+      }
+    })();
 
     this.updateMyobuInfo();
     this.updateDevWalletData();
@@ -440,7 +460,7 @@ export default Vue.extend({
         };
         this.myobuInfo = myobuInfo;
       };
-      setInterval(update, 5000);
+      setInterval(update, 10000);
       update();
     },
 
