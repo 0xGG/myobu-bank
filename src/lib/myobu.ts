@@ -8,6 +8,8 @@ export const myobuTaxMarketingWalletAddress1 =
   "0x2f039292ec1c76be59d057186751cfbb37fa101b";
 export const myobuTaxMarketingWalletAddress2 =
   "0x4e2af3ac0571ecc47cf4d539f9bbdf1996741c98";
+export const myobuDeadWalletAddress =
+  "0x000000000000000000000000000000000000dEaD";
 
 export const myobuTotalSupply = 1000000000000;
 export const myobuAbi = [
