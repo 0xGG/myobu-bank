@@ -23,14 +23,18 @@
         <p class="card-text mb-0">
           Fully diluted market cap:
           <span v-if="myobuInfo" class="text-primary">
-            ${{ myobuInfo.price * myobuTotalSupply }}
+            ${{ (myobuInfo.price * myobuTotalSupply).toLocaleString() }}
           </span>
           <span v-else>-</span>
         </p>
         <p class="card-text mb-0">
           24Hr volume:
           <span v-if="myobuInfo" class="text-primary">
-            ${{ myobuInfo.volume.toFixed(2) }}
+            ${{
+              myobuInfo.volume.toLocaleString("en-US", {
+                maximumFractionDigits: 2,
+              })
+            }}
           </span>
           <span v-else>-</span>
         </p>
@@ -70,10 +74,40 @@
             >{{ myobuDevBuybackWalletAddress.slice(0, 12) }}...</a
           >
           has burned
-          <span class="text-primary">{{ devBuybackBalance }}</span> Myōbu tokens
-          ≈
+          <span class="text-primary">{{
+            devBuybackBalance.toLocaleString("en-US", {
+              maximumFractionDigits: 2,
+            })
+          }}</span>
+          Myōbu tokens ≈
           <span class="text-primary"
-            >${{ (devBuybackBalance * myobuInfo.price).toFixed(2) }}</span
+            >${{
+              (devBuybackBalance * myobuInfo.price).toLocaleString("en-US", {
+                maximumFractionDigits: 2,
+              })
+            }}</span
+          >
+        </p>
+        <p v-if="deadWalletBalance !== undefined && myobuInfo" class="mb-0">
+          The dEaD wallet
+          <a
+            v-bind:href="`https://etherscan.io/token/0x75d12e4f91df721fafcae4c6cd1d5280381370ac?a=${myobuDeadWalletAddress}`"
+            target="_blank"
+            >{{ myobuDeadWalletAddress.slice(0, 12) }}...</a
+          >
+          has burned
+          <span class="text-primary">{{
+            deadWalletBalance.toLocaleString("en-US", {
+              maximumFractionDigits: 2,
+            })
+          }}</span>
+          Myōbu tokens ≈
+          <span class="text-primary"
+            >${{
+              (deadWalletBalance * myobuInfo.price).toLocaleString("en-US", {
+                maximumFractionDigits: 2,
+              })
+            }}</span
           >
         </p>
         <p v-if="devWalletBalance !== undefined && myobuInfo" class="mb-0">
@@ -84,10 +118,18 @@
             >{{ myobuDevWalletAddress.slice(0, 12) }}...</a
           >
           is holding
-          <span class="text-primary">{{ devWalletBalance }}</span> Myōbu tokens
-          ≈
+          <span class="text-primary">{{
+            devWalletBalance.toLocaleString("en-US", {
+              maximumFractionDigits: 2,
+            })
+          }}</span>
+          Myōbu tokens ≈
           <span class="text-primary"
-            >${{ (devWalletBalance * myobuInfo.price).toFixed(2) }}</span
+            >${{
+              (devWalletBalance * myobuInfo.price).toLocaleString("en-US", {
+                maximumFractionDigits: 2,
+              })
+            }}</span
           >
         </p>
         <p
@@ -101,11 +143,18 @@
             >{{ myobuTaxMarketingWalletAddress1.slice(0, 12) }}...</a
           >
           is holding
-          <span class="text-primary">{{ taxMarketingWalletBalance1 }}</span>
+          <span class="text-primary">{{
+            taxMarketingWalletBalance1.toLocaleString("en-US", {
+              maximumFractionDigits: 2,
+            })
+          }}</span>
           Myōbu tokens ≈
           <span class="text-primary"
             >${{
-              (taxMarketingWalletBalance1 * myobuInfo.price).toFixed(2)
+              (taxMarketingWalletBalance1 * myobuInfo.price).toLocaleString(
+                "en-US",
+                { maximumFractionDigits: 2 }
+              )
             }}</span
           >
         </p>
@@ -120,11 +169,18 @@
             >{{ myobuTaxMarketingWalletAddress2.slice(0, 12) }}...</a
           >
           is holding
-          <span class="text-primary">{{ taxMarketingWalletBalance2 }}</span>
+          <span class="text-primary">{{
+            taxMarketingWalletBalance2.toLocaleString("en-US", {
+              maximumFractionDigits: 2,
+            })
+          }}</span>
           Myōbu tokens ≈
           <span class="text-primary"
             >${{
-              (taxMarketingWalletBalance2 * myobuInfo.price).toFixed(2)
+              (taxMarketingWalletBalance2 * myobuInfo.price).toLocaleString(
+                "en-US",
+                { maximumFractionDigits: 2 }
+              )
             }}</span
           >
         </p>
@@ -132,7 +188,7 @@
     </div>
 
     <div class="card mt-4">
-      <div class="card-body">
+      <div class="card-body" v-if="!!contract">
         <div class="card-title">
           <h1 v-if="walletAddress">
             👛
@@ -157,13 +213,21 @@
           <div v-if="walletAddress">
             <p class="mb-0">
               You are now holding
-              <strong class="text-primary">{{ currentBalance }}</strong> Myōbu
-              tokens.
+              <strong class="text-primary">{{
+                currentBalance.toLocaleString("en-US", {
+                  maximumFractionDigits: 2,
+                })
+              }}</strong>
+              Myōbu tokens.
             </p>
-            <p class="mt-0 mb-0">
+            <p class="mt-0 mb-0" v-if="myobuInfo">
               ≈
               <strong class="text-primary"
-                >${{ (currentBalance * myobuInfo.price).toFixed(2) }}</strong
+                >${{
+                  (currentBalance * myobuInfo.price).toLocaleString("en-US", {
+                    maximumFractionDigits: 2,
+                  })
+                }}</strong
               >
             </p>
           </div>
@@ -190,8 +254,10 @@
           <div v-if="oldBalance !== undefined">
             <p class="mt-3 mb-0">
               You were holding
-              <strong class="text-primary">{{ oldBalance }}</strong> Myōbu
-              tokens at the
+              <strong class="text-primary">{{
+                oldBalance.toLocaleString("en-US", { maximumFractionDigits: 2 })
+              }}</strong>
+              Myōbu tokens at the
               <a
                 target="_blank"
                 v-bind:href="`https://etherscan.io/tx/${selectedTransactionHash}`"
@@ -201,15 +267,20 @@
             <p class="mb-0">
               You earned
               <strong class="text-primary">{{
-                currentBalance - oldBalance
+                (currentBalance - oldBalance).toLocaleString("en-US", {
+                  maximumFractionDigits: 2,
+                })
               }}</strong>
               Myōbu tokens.
             </p>
-            <p class="mt-0 mb-0">
+            <p class="mt-0 mb-0" v-if="myobuInfo">
               ≈
               <strong class="text-primary"
                 >${{
-                  ((currentBalance - oldBalance) * myobuInfo.price).toFixed(2)
+                  (
+                    (currentBalance - oldBalance) *
+                    myobuInfo.price
+                  ).toLocaleString("en-US", { maximumFractionDigits: 2 })
                 }}</strong
               >
             </p>
@@ -227,7 +298,11 @@
             <p class="mb-0">
               1-day Reward:
               <strong class="text-primary"
-                >${{ estimation.dailyFee.toFixed(2) }}</strong
+                >${{
+                  estimation.dailyFee.toLocaleString("en-US", {
+                    maximumFractionDigits: 2,
+                  })
+                }}</strong
               >
               (<strong class="text-primary"
                 >{{ (estimation.dailyPercent * 100).toFixed(2) }}%</strong
@@ -235,14 +310,21 @@
             </p>
             <p>
               <strong class="text-primary">{{
-                estimation.dailyFee / myobuInfo.price
+                (estimation.dailyFee / myobuInfo.price).toLocaleString(
+                  "en-US",
+                  { maximumFractionDigits: 2 }
+                )
               }}</strong>
               Myōbu tokens.
             </p>
             <p class="mb-0">
               30-day Reward:
               <strong class="text-primary"
-                >${{ estimation.monthlyFee.toFixed(2) }}</strong
+                >${{
+                  estimation.monthlyFee.toLocaleString("en-US", {
+                    maximumFractionDigits: 2,
+                  })
+                }}</strong
               >
               (<strong class="text-primary"
                 >{{ (estimation.monthlyPercent * 100).toFixed(2) }}%</strong
@@ -250,14 +332,21 @@
             </p>
             <p>
               <strong class="text-primary">{{
-                estimation.monthlyFee / myobuInfo.price
+                (estimation.monthlyFee / myobuInfo.price).toLocaleString(
+                  "en-US",
+                  { maximumFractionDigits: 2 }
+                )
               }}</strong>
               Myōbu tokens.
             </p>
             <p class="mb-0">
               365-day Reward:
               <strong class="text-primary"
-                >${{ estimation.yearlyFee.toFixed(2) }}</strong
+                >${{
+                  estimation.yearlyFee.toLocaleString("en-US", {
+                    maximumFractionDigits: 2,
+                  })
+                }}</strong
               >
               (<strong class="text-primary"
                 >{{ (estimation.yearlyPercent * 100).toFixed(2) }}%</strong
@@ -265,10 +354,20 @@
             </p>
             <p>
               <strong class="text-primary">{{
-                estimation.yearlyFee / myobuInfo.price
+                (estimation.yearlyFee / myobuInfo.price).toLocaleString(
+                  "en-US",
+                  { maximumFractionDigits: 2 }
+                )
               }}</strong>
               Myōbu tokens.
             </p>
+          </div>
+        </div>
+      </div>
+      <div v-else>
+        <div class="card-body">
+          <div class="card-title">
+            <h1>Please install MetaMask!</h1>
           </div>
         </div>
       </div>
@@ -292,11 +391,13 @@
 import Vue from "vue";
 import Web3 from "web3";
 import { Contract } from "web3-eth-contract";
+import detectEthereumProvider from "@metamask/detect-provider";
 import {
   myobuAbi,
   myobuContractAddress,
   myobuTotalSupply,
   myobuDevBuybackWalletAddress,
+  myobuDeadWalletAddress,
   myobuDevWalletAddress,
   myobuTaxMarketingWalletAddress1,
   myobuTaxMarketingWalletAddress2,
@@ -333,6 +434,7 @@ interface Data {
   currentBalance?: number;
   oldBalance?: number;
   devBuybackBalance?: number;
+  deadWalletBalance?: number;
   devWalletBalance?: number;
   taxMarketingWalletBalance1?: number;
   taxMarketingWalletBalance2?: number;
@@ -342,6 +444,7 @@ interface Data {
   myobuTotalSupply: number;
   myobuContractAddress: string;
   myobuDevBuybackWalletAddress: string;
+  myobuDeadWalletAddress: string;
   myobuDevWalletAddress: string;
   myobuTaxMarketingWalletAddress1: string;
   myobuTaxMarketingWalletAddress2: string;
@@ -367,6 +470,7 @@ export default Vue.extend({
       currentBalance: undefined,
       oldBalance: undefined,
       devBuybackBalance: undefined,
+      deadWalletBalance: undefined,
       devWalletBalance: undefined,
       taxMarketingWalletBalance1: undefined,
       taxMarketingWalletBalance2: undefined,
@@ -376,6 +480,7 @@ export default Vue.extend({
       myobuTotalSupply,
       myobuContractAddress,
       myobuDevBuybackWalletAddress,
+      myobuDeadWalletAddress,
       myobuDevWalletAddress,
       myobuTaxMarketingWalletAddress1,
       myobuTaxMarketingWalletAddress2,
@@ -385,14 +490,26 @@ export default Vue.extend({
   },
 
   mounted() {
-    const web3 = new Web3(
-      "https://eth-mainnet.alchemyapi.io/v2/BfPioABnA3btK_rV-rORjlu-wzk-b5Ih"
-    );
-    const contract = new web3.eth.Contract(
-      myobuAbi as any,
-      myobuContractAddress
-    );
-    this.contract = contract;
+    (async () => {
+      const provider: any = await detectEthereumProvider();
+      if (provider) {
+        try {
+          // Request account access if needed
+          // await (window["ethereum"] as any).enable();
+          const web3 = new Web3(provider);
+          const contract = new web3.eth.Contract(
+            myobuAbi as any,
+            myobuContractAddress
+          );
+          this.contract = contract;
+        } catch (error) {
+          // User denied account access...
+        }
+      } else {
+        console.log("Please install MetaMask!");
+        this.contract = null;
+      }
+    })();
 
     this.updateMyobuInfo();
     this.updateDevWalletData();
@@ -440,7 +557,7 @@ export default Vue.extend({
         };
         this.myobuInfo = myobuInfo;
       };
-      setInterval(update, 5000);
+      setInterval(update, 10000);
       update();
     },
 
@@ -448,6 +565,9 @@ export default Vue.extend({
       const update = async () => {
         this.devBuybackBalance = await this.getUserCurrentBalance(
           myobuDevBuybackWalletAddress
+        );
+        this.deadWalletBalance = await this.getUserCurrentBalance(
+          myobuDeadWalletAddress
         );
         this.devWalletBalance = await this.getUserCurrentBalance(
           myobuDevWalletAddress
